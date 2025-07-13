@@ -26,7 +26,7 @@ public class ChatController {
     private Button sendBtn;
 
     @FXML
-    void initialize() throws IOException, InterruptedException {
+    void initialize() {
         this.socketService = new SocketService();
         socketService.start();
 
