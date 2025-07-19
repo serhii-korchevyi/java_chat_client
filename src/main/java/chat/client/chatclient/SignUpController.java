@@ -26,6 +26,12 @@ public class SignUpController {
     private PasswordField passwordField;
 
     @FXML
+    private TextField firstNameField;
+
+    @FXML
+    private TextField lastNameField;
+
+    @FXML
     private Button signInBtn;
 
     @FXML
@@ -57,6 +63,8 @@ public class SignUpController {
 
             credentials.put("login", loginField.getText().trim());
             credentials.put("password", passwordField.getText().trim());
+            credentials.put("first_name", firstNameField.getText().trim());
+            credentials.put("last_name", lastNameField.getText().trim());
 
             ObjectMapper objectMapper = new ObjectMapper();
             try {
