@@ -4,12 +4,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -17,7 +19,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
 
-public class SignInController {
+public class SignInController extends AbstractController {
+
+    @FXML
+    public AnchorPane SignInPane;
 
     @FXML
     private TextField loginField;
@@ -33,6 +38,7 @@ public class SignInController {
 
     @FXML
     void initialize() {
+
         signUpBtn.setOnAction(ActionEvent -> {
             signInBtn.getScene().getWindow().hide();
 
@@ -48,6 +54,13 @@ public class SignInController {
             stage.setMinWidth(400);
             stage.setMinHeight(400);
             stage.setScene(scene);
+
+            stage.setOnCloseRequest(event -> {
+                event.consume();
+                AbstractController controller = loader.getController();
+                controller.exit(stage);
+            });
+
             stage.show();
         });
 
@@ -85,6 +98,13 @@ public class SignInController {
                         stage.setMinWidth(400);
                         stage.setMinHeight(400);
                         stage.setScene(scene);
+
+                        stage.setOnCloseRequest(event -> {
+                            event.consume();
+                            AbstractController controller = loader.getController();
+                            controller.exit(stage);
+                        });
+
                         stage.show();
                     }
                 } catch (IOException e) {
@@ -97,5 +117,4 @@ public class SignInController {
             }
         });
     }
-
 }

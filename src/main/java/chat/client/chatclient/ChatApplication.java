@@ -4,10 +4,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.*;
 
 public class ChatApplication extends Application {
+
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -18,8 +18,9 @@ public class ChatApplication extends Application {
         stage.show();
 
         stage.setOnCloseRequest(event -> {
-            ChatController chatController = fxmlLoader.getController();
-            chatController.exit(stage);
+            event.consume();
+            AbstractController controller = fxmlLoader.getController();
+            controller.exit(stage);
         });
     }
 

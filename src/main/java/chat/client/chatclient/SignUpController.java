@@ -2,6 +2,7 @@ package chat.client.chatclient;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -9,7 +10,9 @@ import javafx.scene.control.TextField;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
+import javax.imageio.IIOParam;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -17,7 +20,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
 
-public class SignUpController {
+public class SignUpController extends AbstractController {
 
     @FXML
     private TextField loginField;
@@ -39,6 +42,7 @@ public class SignUpController {
 
     @FXML
     void initialize() {
+
         signInBtn.setOnAction(ActionEvent -> {
             signUpBtn.getScene().getWindow().hide();
 
@@ -54,6 +58,13 @@ public class SignUpController {
             stage.setMinWidth(400);
             stage.setMinHeight(400);
             stage.setScene(scene);
+
+            stage.setOnCloseRequest(event -> {
+                event.consume();
+                AbstractController controller = loader.getController();
+                controller.exit(stage);
+            });
+
             stage.show();
         });
 
@@ -95,6 +106,13 @@ public class SignUpController {
                     stage.setMinWidth(400);
                     stage.setMinHeight(400);
                     stage.setScene(scene);
+
+                    stage.setOnCloseRequest(event -> {
+                        event.consume();
+                        AbstractController controller = loader.getController();
+                        controller.exit(stage);
+                    });
+
                     stage.show();
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -107,5 +125,4 @@ public class SignUpController {
             }
         });
     }
-
 }

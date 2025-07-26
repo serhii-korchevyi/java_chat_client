@@ -1,15 +1,14 @@
 package chat.client.chatclient;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class ChatController {
+public class ChatController extends AbstractController {
 
     SocketService socketService;
 
@@ -20,14 +19,28 @@ public class ChatController {
     private TextField inputMessageField;
 
     @FXML
-    private TextArea messagesArea;
+    private VBox messagesArea;
 
     @FXML
     private Button sendBtn;
 
+
     @FXML
     void initialize() {
         this.socketService = new SocketService();
+
+        this.socketService.setMessageListener(message -> {
+            System.out.println("Controller received message: " + message);
+
+            // Обновляем UI — нужно выполнять в JavaFX Application Thread
+            javafx.application.Platform.runLater(() -> {
+                TextArea messageBox = new TextArea(message);
+                messageBox.setWrapText(true);
+                messageBox.setEditable(false);
+                this.messagesArea.getChildren().add(messageBox);
+            });
+        });
+
         socketService.start();
 
         sendBtn.setOnAction(actionEvent -> {
@@ -42,8 +55,15 @@ public class ChatController {
     }
 
     public void exit(Stage stage) {
-        this.socketService.close();
-        stage.close();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Logout");
+        alert.setHeaderText("Do you want to logout?");
+
+        if (alert.showAndWait().get() == ButtonType.OK) {
+            this.socketService.close();
+            Stage currentStage = (Stage) stage.getScene().getWindow();
+            currentStage.close();
+        }
     }
 
 }

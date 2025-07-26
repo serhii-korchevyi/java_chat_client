@@ -9,6 +9,11 @@ public class SocketService extends Thread {
     public BufferedReader in;
     public BufferedWriter out;
     public String message;
+    private MessageListener listener;
+
+    public void setMessageListener(MessageListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public void run() {
@@ -17,8 +22,8 @@ public class SocketService extends Thread {
             this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             this.out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 
-            while (true) {
-                this.renderMessage();
+            while (!this.clientSocket.isClosed()) {
+                this.getMessage();
             }
         } catch (Exception e) {
             this.close();
@@ -38,10 +43,13 @@ public class SocketService extends Thread {
         }
     }
 
-    private void renderMessage() throws IOException {
+    private void getMessage() throws IOException {
         System.out.println("render");
         String serverMessage = this.in.readLine();
         System.out.println("New message read: " + serverMessage);
+        if (serverMessage != null && listener != null) {
+            listener.onMessageReceived(serverMessage);
+        }
     }
 
     public void close() {
